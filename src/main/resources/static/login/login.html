@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Accesso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/login/login.css">
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <h2 id="formTitle">Login</h2>
+        <p id="message"></p>
+
+        <!-- LOGIN -->
+        <form id="loginForm">
+            <input id="loginUsername" type="text" placeholder="Username" required>
+            <input id="loginPassword" type="password" placeholder="Password" required>
+            <button type="button" id="loginBtn">Accedi</button>
+
+            <span class="switch">
+                Non hai un account?
+                <a href="#" id="showRegister">Registrati</a>
+            </span>
+        </form>
+
+        <!-- REGISTRAZIONE -->
+        <form id="registerForm" class="hidden">
+            <input id="regUsername" type="text" placeholder="Username" required>
+            <input id="regEmail" type="email" placeholder="Email" required>
+            <input id="regPassword" type="password" placeholder="Password" required>
+            <button type="button" id="registerBtn">Registrati</button>
+
+            <span class="switch">
+                Hai già un account?
+                <a href="#" id="showLogin">Accedi</a>
+            </span>
+        </form>
+
+        <a class="back" href="/index.html">← Torna alla dashboard</a>
+
+    </div>
+</div>
+
+<script src="/login/login.js"></script>
+</body>
+</html>

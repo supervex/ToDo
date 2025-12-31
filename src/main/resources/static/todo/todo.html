@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo</title>
+    <link rel="stylesheet" href="/todo/todo.css">
+</head>
+<body>
+
+<header class="topbar">
+    <h1>TODO</h1>
+</header>
+
+<main class="todo-container">
+
+    <div class="todo-form">
+        <input id="todoTitle" class="todo-title" placeholder="Nuovo task">
+        <select id="todoStatus" class="todo-select">
+            <option value="TODO">TODO</option>
+            <option value="IN_PROGRESS">IN PROGRESS</option>
+            <option value="DONE">DONE</option>
+        </select>
+        <button id="saveTodo" type="button" class="save-btn">Salva</button>
+    </div>
+
+    <div id="message"></div>
+
+    <!-- MODALE -->
+    <div id="dateModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Inserisci data fine</h3>
+            <input type="date" id="endDate">
+            <div class="modal-actions">
+                <button id="confirmDate" type="button">Conferma</button>
+                <button id="cancelDate" type="button">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="todoList" class="todo-list"></div>
+</main>
+
+<script src="/todo/todo.js"></script>
+</body>
+</html>

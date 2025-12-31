@@ -1,0 +1,168 @@
+/* =====================
+   VARIABILI BASE
+===================== */
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --accent: #2b96f6;
+  --text: #111827;
+  --muted: #6b7280;
+}
+
+/* =====================
+   RESET BASE
+===================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =====================
+   HEADER
+===================== */
+.topbar {
+  padding: 16px 24px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* =====================
+   CONTAINER TODO
+===================== */
+.todo-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* =====================
+   FORM TODO
+===================== */
+.todo-form {
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.todo-input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.todo-select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+.save-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+
+.save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =====================
+   MESSAGGI
+===================== */
+#message {
+  margin-top: 12px;
+  min-height: 20px;
+}
+
+/* =====================
+   LISTA TODO
+===================== */
+.todo-list {
+  margin-top: 24px;
+  background: var(--card);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.todo-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.todo-row:last-child {
+  border-bottom: none;
+}
+
+.status {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* =====================
+   MODALE
+===================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 280px;
+}
+
+.modal-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-actions button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-actions button:first-child {
+  background: var(--accent);
+  color: white;
+}
+
+/* =====================
+   UTILITY
+===================== */
+.modal.hidden {
+  display: none !important;
+}
+
