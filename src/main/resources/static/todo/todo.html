@@ -29,13 +29,28 @@
     <div id="dateModal" class="modal hidden">
         <div class="modal-content">
             <h3>Inserisci data fine</h3>
+
+            <!-- quick buttons -->
+            <div class="quick-buttons">
+                <button type="button" class="quick-btn" data-add="day">+ 1 giorno</button>
+                <button type="button" class="quick-btn" data-add="week">+ 1 settimana</button>
+                <button type="button" class="quick-btn" data-add="month">+ 1 mese</button>
+                <button type="button" id="clearChips" class="clear-btn">Reset</button>
+            </div>
+
+            <!-- chips area (mostra una "mattoncino" per ogni click) -->
+            <div id="chipsContainer" class="chips-container" aria-live="polite"></div>
+
+            <label for="endDate">Data fine</label>
             <input type="date" id="endDate">
+
             <div class="modal-actions">
                 <button id="confirmDate" type="button">Conferma</button>
                 <button id="cancelDate" type="button">Annulla</button>
             </div>
         </div>
     </div>
+
 
     <div id="todoList" class="todo-list"></div>
 </main>
