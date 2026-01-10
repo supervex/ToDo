@@ -1,16 +1,75 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const title = document.querySelector('.topbar h1');
+
+    let isLogged = false;
+    let userId = null;
+    let username = null;
+
+    // Controlla sessione
+    try {
+        const res = await fetch('/api/user/me', {
+            credentials: 'same-origin'
+        });
+
+        if (!res.ok) {
+            isLogged = false;
+        } else {
+            const data = await res.json();
+            isLogged = !!data.logged;
+            userId = data.userId ?? null;
+            username = data.username ?? null;
+        }
+    } catch (err) {
+        console.error('Errore controllo sessione:', err);
+        isLogged = false;
+    }
+
+    if (isLogged) {
+        loginBtn.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        title.innerText = `BENVENUTO, ${username}`;
+    } else {
+        loginBtn.classList.remove('hidden');
+        logoutBtn.classList.add('hidden');
+        title.innerText = `BENVENUTO`;
+    }
 
     document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', (e) => {
             const action = card.dataset.action;
 
             if (action === 'todo') {
+                if (!isLogged) {
+                    // reindirizza a login se non loggato
+                    window.location.href = '/login/login.html';
+                    return;
+                }
                 window.location.href = 'todo/todo.html';
+                return;
             }
+
+            // altre azioni non protette
         });
     });
-});
-document.getElementById('loginBtn')
-    ?.addEventListener('click', () => {
+
+    loginBtn?.addEventListener('click', () => {
         window.location.href = '/login/login.html';
     });
+
+    logoutBtn?.addEventListener('click', async () => {
+        try {
+            await fetch('/api/user/logout', {
+                method: 'POST',
+                credentials: 'same-origin'
+            });
+        } catch (err) {
+            console.error('Errore logout:', err);
+        } finally {
+            window.location.reload();
+        }
+    });
+
+});

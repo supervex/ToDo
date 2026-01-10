@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.dto.user.UserLoginRequest;
 import spring.dto.user.UserLoginResponse;
@@ -11,6 +13,8 @@ import spring.dto.user.UserLoginResponse;
 import spring.dto.user.UserRegisterRequest;
 import spring.dto.user.UserRegisterResponse;
 import spring.service.UserService;
+
+import java.util.Map;
 
 
 @RestController
@@ -35,23 +39,24 @@ public class UserController {
         userService.logout(session);
     }
 
-    @GetMapping("/me")
-    public String whoAmI(HttpSession session) {
-        Long userId = (Long) session.getAttribute("USER_ID");
-
-        if (userId == null) {
-            return "Non loggato";
-        }
-
-        return "User ID: " + userId;
-    }
-
     @PostMapping("/register")
     public UserRegisterResponse register(
             @RequestBody UserRegisterRequest request
     ) {
         log.info("start for register payload: {}", request);
         return userService.register(request);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> whoAmI(HttpSession session) {
+        Long userId = (Long) session.getAttribute("USER_ID");
+        String username = (String) session.getAttribute("USERNAME");
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("logged", false));
+        }
+        return ResponseEntity.ok(Map.of("logged", true, "userId", userId, "username", username));
     }
 
 }

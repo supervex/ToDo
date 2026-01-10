@@ -7,6 +7,7 @@ public  class TodoBuilder {
 
     public static Todo buildTodo(TodoRequest request){
         Todo todo = new Todo();
+        todo.setUserId(request.getUserId());
         todo.setTitle(request.getTitle());
         todo.setDescription(request.getDescription());
         todo.setStatus(request.getStatus());

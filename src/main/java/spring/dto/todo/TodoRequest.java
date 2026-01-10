@@ -6,7 +6,7 @@ import spring.util.Enum;
 import java.time.LocalDate;
 
 public class TodoRequest {
-
+    private Long userId;
     private String title;
     private String description;
     private Enum.TodoStatus status;
@@ -51,6 +51,14 @@ public class TodoRequest {
 
     public void setPriority(Enum.Priority priority) {
         this.priority = priority;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
 

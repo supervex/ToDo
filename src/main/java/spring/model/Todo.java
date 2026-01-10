@@ -13,7 +13,7 @@ public class Todo {
     private Long id;
 
     @Column(nullable = false)
-    private String userId;
+    private Long userId;
 
     @Column(nullable = false)
     private String title;
@@ -35,7 +35,7 @@ public class Todo {
 
     private LocalDateTime updatedAt;
 
-    public Todo(Long id, String userId, String title, String description, Enum.TodoStatus status, Enum.Priority priority, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Todo(Long id, Long userId, String title, String description, Enum.TodoStatus status, Enum.Priority priority, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -114,11 +114,11 @@ public class Todo {
         this.updatedAt = updatedAt;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -126,7 +126,7 @@ public class Todo {
     public String toString() {
         return "Todo{" +
                 "id=" + id +
-                ", userId='" + userId + '\'' +
+                ", userId=" + userId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +

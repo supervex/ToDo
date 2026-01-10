@@ -13,21 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmBtn = document.getElementById('confirmDate');
     const cancelBtn = document.getElementById('cancelDate');
 
-    // 🔐 GUARDIA
     if (!dateModal || !saveBtn || !confirmBtn || !cancelBtn) {
         console.error('Elementi DOM mancanti, todo.js abortito');
         return;
     }
 
-    // 🔒 forza modale chiusa all'avvio
     dateModal.classList.add('hidden');
 
     let pendingTodo = null;
 
-    // mantenere la tua callProva se serve
-    // callProva(); // già chiamata altrove se vuoi
-
-    // click Salva: mostra modale per la data (non esegue POST qui)
     saveBtn.addEventListener('click', () => {
         const text = title.value.trim();
         const status = statusSelect.value;
@@ -44,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveBtn.disabled = true;     // evita più aperture
     });
 
-    // conferma data -> esegue la POST con la proprietà "dueDate"
     confirmBtn.addEventListener('click', () => {
 
         const dueDate = endDateInput.value; // formato yyyy-mm-dd
@@ -53,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // costruisco il body con la proprietà dueDate (il DTO Java aspetta dueDate)
         const body = {
             ...pendingTodo,
             dueDate: dueDate
@@ -70,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return res.json();
             })
             .then(response => {
-                // attenzione: backend deve restituire TodoResponse con campi success e message
                 if (response.success) {
                     messageDiv.innerText = response.message || 'Salvato';
                     messageDiv.style.color = 'green';
@@ -93,14 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
-    // annulla
     cancelBtn.addEventListener('click', () => {
         dateModal.classList.add('hidden');
         pendingTodo = null;
         saveBtn.disabled = false;
     });
 
-    // fetch lista
     function fetchTodos() {
         fetch('/api/todos')
             .then(res => {
@@ -129,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         todoList.appendChild(row);
     }
 
-    // semplice escape per sicurezza XSS
     function escapeHtml(s) {
         if (!s) return '';
         return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
