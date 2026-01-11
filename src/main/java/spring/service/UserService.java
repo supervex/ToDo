@@ -97,7 +97,6 @@ public class UserService {
             return response;
         }
 
-        // password criptata
         String hashedPassword =
                 passwordEncoder.encode(request.getPassword());
 

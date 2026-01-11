@@ -15,6 +15,7 @@
 
     <div class="todo-form">
         <input id="todoTitle" class="todo-title" placeholder="Nuovo task">
+        <textarea id="todoDescription" class="todo-description" placeholder="Descrizione (opzionale)"></textarea>
         <select id="todoStatus" class="todo-select">
             <option value="TODO">TODO</option>
             <option value="IN_PROGRESS">IN PROGRESS</option>
@@ -28,8 +29,14 @@
     <!-- MODALE -->
     <div id="dateModal" class="modal hidden">
         <div class="modal-content">
-            <h3>Inserisci data fine</h3>
 
+            <div class="priority-buttons" role="radiogroup" aria-label="Priorità">
+                <button type="button" class="priority-btn" data-priority="LOW">Bassa</button>
+                <button type="button" class="priority-btn" data-priority="MEDIUM">Media</button>
+                <button type="button" class="priority-btn" data-priority="HIGH">Alta</button>
+            </div>
+
+            <h3>Inserisci data fine</h3>
             <!-- quick buttons -->
             <div class="quick-buttons">
                 <button type="button" class="quick-btn" data-add="day">+ 1 giorno</button>
