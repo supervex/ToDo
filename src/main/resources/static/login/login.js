@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // prevenzione doppio click
         loginBtn.disabled = true;
         showMessage('Sto effettuando il login...', 'black');
 

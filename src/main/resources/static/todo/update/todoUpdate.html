@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Modifica Todo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="todoUpdate.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Modifica Todo</h1>
+
+  <label for="title">Titolo</label>
+  <input id="title" type="text">
+
+  <label for="description">Descrizione</label>
+  <textarea id="description"></textarea>
+
+  <label for="status">Stato</label>
+  <select id="status">
+    <option value="TODO">TODO</option>
+    <option value="IN_PROGRESS">IN PROGRESS</option>
+    <option value="DONE">DONE</option>
+  </select>
+
+  <div class="actions">
+    <button class="save" id="saveBtn">Salva</button>
+    <button class="cancel" id="cancelBtn">Annulla</button>
+  </div>
+
+  <div class="message" id="message"></div>
+</div>
+
+<script src="todoUpdate.js"></script>
+</body>
+</html>

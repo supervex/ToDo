@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const title = document.querySelector('.topbar h1');
+    const adminBtn = document.getElementById('adminBtn');
 
     let isLogged = false;
     let userId = null;
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (action === 'todo') {
                 if (!isLogged) {
-                    // reindirizza a login se non loggato
+
                     window.location.href = '/login/login.html';
                     return;
                 }
@@ -72,4 +73,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    adminBtn?.addEventListener('click', () => {
+        const userName = "admin"
+        const password = "admin"
+
+        try {
+            const res =  fetch('/api/user/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                credentials: 'same-origin',
+                body: JSON.stringify({ userName, password })
+            });
+            setTimeout(() => {
+                window.location.href = '/index.html';
+            }, 600);
+
+        } catch (err) {
+        } finally {
+            loginBtn.disabled = false;
+        }
+    });
 });

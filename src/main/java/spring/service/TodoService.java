@@ -4,8 +4,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.dto.todo.TodoResponse;
+import spring.dto.todo.TodoUpdateRequest;
 import spring.model.Todo;
 import spring.repository.TodoRepository;
+import spring.util.Enum;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,33 +40,32 @@ public class TodoService {
         return todoRepository.findByUserId(userId);
     }
 
-    @Transactional
-    public TodoResponse update(Todo todo) {
-        try {
-            Long id = todo.getId();
-            Long userId = todo.getUserId();
-            if (id == null || userId == null) {
-                return new TodoResponse("Id o userId mancanti", false);
-            }
-
-            Optional<Todo> existingOpt = todoRepository.findByIdAndUserId(id, userId);
-            if (existingOpt.isEmpty()) {
-                return new TodoResponse("Todo non trovato o non autorizzato", false);
-            }
-
-            Todo existing = existingOpt.get();
-            existing.setTitle(todo.getTitle());
-            existing.setStatus(todo.getStatus());
-            existing.setDueDate(todo.getDueDate());
-            existing.setPriority(todo.getPriority());
-            existing.setDescription(todo.getDescription());
-            existing.setUpdatedAt(LocalDateTime.now());
-
-            todoRepository.save(existing);
-            return new TodoResponse("Aggiornato con successo", true);
-        } catch (Exception e) {
-            return new TodoResponse("Errore durante l'aggiornamento: " + e.getMessage(), false);
+    public TodoResponse updatePartial(TodoUpdateRequest request, Long userId) {
+        Optional<Todo> existingOpt =
+                todoRepository.findByIdAndUserId(request.getId(), userId);
+        if (existingOpt.isEmpty()) {
+            return new TodoResponse("Todo non trovato o non autorizzato", false);
         }
+        Todo todo = existingOpt.get();
+
+        if (request.getTitle() != null)
+            todo.setTitle(request.getTitle());
+
+        if (request.getDescription() != null)
+            todo.setDescription(request.getDescription());
+
+        if (request.getStatus() != null)
+            todo.setStatus(request.getStatus());
+
+        if (request.getDueDate() != null)
+            todo.setDueDate(request.getDueDate());
+
+        if (request.getPriority() != null)
+            todo.setPriority(request.getPriority());
+
+        todoRepository.save(todo);
+
+        return new TodoResponse("Todo aggiornato con successo", true);
     }
 
     @Transactional
@@ -76,4 +77,18 @@ public class TodoService {
             return false;
         }
     }
+
+    public void updateStatus(Long todoId, Long userId, Enum.TodoStatus status) {
+        Todo todo = todoRepository.findByIdAndUserId(todoId, userId)
+                .orElseThrow(() -> new RuntimeException("Todo non trovato"));
+        todo.setStatus(status);
+        todoRepository.save(todo);
+    }
+
+    public Todo getTodoById(Long id, Long userId) {
+        return todoRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Todo non trovato o non autorizzato"));
+    }
+
 }
