@@ -41,6 +41,7 @@ public class TodoController {
 
     @PatchMapping("/update")
     public ResponseEntity<?> update(@RequestBody TodoUpdateRequest request, HttpSession session) {
+        log.info("start for update payload: {}", request);
         Long userId = (Long) session.getAttribute("USER_ID");
         if (userId == null) {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "Non loggato"));}
         TodoResponse response = service.updatePartial(request, userId);
@@ -58,6 +59,7 @@ public class TodoController {
 
     @PatchMapping("/update-status")
     public ResponseEntity<?> updateStatus(@RequestBody Map<String, String> body, HttpSession session) {
+        log.info("start for updateStatus payload: {}", body);
         Long userId = (Long) session.getAttribute("USER_ID");
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -71,6 +73,7 @@ public class TodoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Long id, HttpSession session) {
+        log.info("start for getTodo payload: {}", id);
         Long userId = (Long) session.getAttribute("USER_ID");
         try {
             Todo todo = service.getTodoById(id, userId);
@@ -83,6 +86,7 @@ public class TodoController {
 
     @GetMapping("/status")
     public ResponseEntity<?> getTodosByStatuses(@RequestParam("status") List<Enum.TodoStatus> statuses, HttpSession session) {
+        log.info("start for getByStatus payload: {}", statuses);
         Long userId = (Long) session.getAttribute("USER_ID");
         if (userId == null) {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "Non loggato"));}
         List<Todo> todos = service.findAllByStatuses(statuses, userId);

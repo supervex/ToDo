@@ -1,6 +1,8 @@
 package spring.service;
 
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.dto.todo.TodoResponse;
@@ -18,7 +20,7 @@ import java.util.Optional;
 @Service
 public class TodoService {
 
-
+    private static final Logger log = LoggerFactory.getLogger(TodoService.class);
     private final TodoRepository todoRepository;
     private final NotificationService notificationService;
     private final HttpSession httpSession;
@@ -33,7 +35,7 @@ public class TodoService {
         try {
             todo.setCreatedAt(LocalDateTime.now());
             todoRepository.save(todo);
-
+            log.info("end for save payload: {}", todo);
             return new TodoResponse("Salvato con successo",true );
         } catch (Exception e) {
             return new TodoResponse( "Errore durante il salvataggio: " + e.getMessage(),false );
@@ -63,6 +65,7 @@ public class TodoService {
         if (request.getPriority() != null)
             todo.setPriority(request.getPriority());
 
+        log.info("end for update payload: {}", todo);
         todoRepository.save(todo);
 
         return new TodoResponse("Todo aggiornato con successo", true);
@@ -82,6 +85,7 @@ public class TodoService {
         Todo todo = todoRepository.findByIdAndUserId(todoId, userId)
                 .orElseThrow(() -> new RuntimeException("Todo non trovato"));
         todo.setStatus(status);
+        log.info("end for updateStatus payload: {}", todo);
         todoRepository.save(todo);
     }
 
@@ -119,6 +123,7 @@ public class TodoService {
         if (!toSave.isEmpty()) {
             todoRepository.saveAll(toSave);
         }
+        log.info("end for findAll payload: {}", todos);
         return todos;
     }
 
