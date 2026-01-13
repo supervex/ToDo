@@ -1,0 +1,37 @@
+<header class="topbar" role="banner">
+  <div class="topbar-left">
+    <a href="/index.html" class="topbar-logo" title="Torna alla dashboard">
+      <img src="/img/logo3.png" alt="Draghetto" />
+    </a>
+    <div class="brand">
+      <h1 id="topbarTitle">BENVENUTO</h1>
+      <p class="subtitle" id="topbarSubtitle">La tua dashboard</p>
+    </div>
+  </div>
+
+  <div class="topbar-right" role="navigation" aria-label="Azioni principali">
+    <button id="adminBtn" class="btn btn-ghost" title="Pannello admin">Admin</button>
+
+    <label class="search-wrap" for="searchInput" aria-hidden="true">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      </svg>
+      <input id="searchInput" class="search" placeholder="Cerca..." />
+    </label>
+
+    <button id="notificationBtn" class="notification-btn" aria-label="Notifiche">
+      <svg class="bell-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M9 17a3 3 0 006 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span id="notificationBadge" class="notification-badge hidden">0</span>
+    </button>
+
+    <div id="popover" class="notif-popover" style="display:none; position:absolute; top:48px; right:0;"></div>
+
+
+    <button id="loginBtn" class="btn btn-primary">Login</button>
+    <button id="logoutBtn" class="btn btn-outline hidden">Logout</button>
+  </div>
+</header>

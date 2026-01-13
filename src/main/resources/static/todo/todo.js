@@ -1,3 +1,9 @@
+document.addEventListener('topbar:ready', () => {
+    if (typeof window.topbarSetTitle === 'function') {
+        window.topbarSetTitle('Dashboard Todo', 'Gestisci le tue attività');
+    }
+});
+
 document.addEventListener('DOMContentLoaded', async () => {
 
     console.log("todo.js caricato");
@@ -398,5 +404,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // avvio
     await reloadTodosToUI();
-
+    window.topbarSetTitle('Dashboard Todo', 'Gestisci le tue attività');
 });

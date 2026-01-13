@@ -94,21 +94,30 @@ async function fetchNotificationsCount() {
 }
 
 async function fetchNotifications() {
-    return getJSON('/api/notifications');
+    return getJSON('/api/notifications/all');
 }
 
-async function markNotificationAsRead(notificationId) {
-    const res = await fetch(`/api/notifications/${notificationId}/read`, {
-        method: 'PUT',
-        credentials: 'same-origin'
+async function markNotificationsAsRead(notificationIds) {
+    if (!notificationIds || notificationIds.length === 0) return true;
+
+    const res = await fetch('/api/notifications/read', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(notificationIds)
     });
-    if (!res.ok) throw new Error(`/api/notifications/${notificationId}/read - ${res.status}`);
+
+    if (!res.ok) throw new Error(`/api/notifications/read - ${res.status}`);
     return res.json();
 }
+
 
 // ---------------------------
 // Esporta tutte le funzioni globalmente
 // ---------------------------
+
 window.api = {
     fetchUser,
     loginUser,
@@ -121,5 +130,5 @@ window.api = {
     updateTodo,
     fetchNotificationsCount,
     fetchNotifications,
-    markNotificationAsRead
+    markNotificationsAsRead
 };

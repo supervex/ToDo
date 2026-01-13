@@ -2,6 +2,8 @@ package spring.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "notification")
 public class Notification {
@@ -14,6 +16,8 @@ public class Notification {
 
     @Column(nullable = false)
     private String message;
+
+    private LocalDate createdAt;
 
     private boolean unRead;
 
