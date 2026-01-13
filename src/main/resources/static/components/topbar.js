@@ -57,7 +57,7 @@ document.addEventListener('topbar:ready', async () => {
         try { await window.api.logoutUser(); } finally { window.location.reload(); }
     });
     adminBtn?.addEventListener('click', async () => {
-        try { await window.api.loginUser('admin', 'admin'); window.location.reload(); }
+        try { await window.api.loginUser('dudins', 'admin'); window.location.reload(); }
         catch (err) { console.error('Errore login admin', err); }
     });
 

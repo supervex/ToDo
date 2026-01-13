@@ -70,13 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
         showMessage('Sto effettuando il login...', 'black');
 
         try {
-            const res = await window.api.loginUser(userName, password);
-            const data = await res.json().catch(() => ({}));
+            const data = await window.api.loginUser(userName, password);  // già JSON
 
-            if (!res.ok || !data.success) throw new Error(data?.message || 'Errore durante il login');
+            if (!data.success) throw new Error(data.message || 'Errore durante il login');
 
             showMessage(data.message || 'Login effettuato', 'blue');
-
             setTimeout(() => window.location.href = '/index.html', 600);
         } catch (err) {
             showMessage(err.message || 'Errore di rete', 'red');
@@ -84,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginBtn.disabled = false;
         }
     });
+
 
     // ---------------------------
     // REGISTRAZIONE
