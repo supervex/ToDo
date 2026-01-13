@@ -106,3 +106,6 @@ body { background: linear-gradient(180deg,#f3f6fb 0%, #f9fbff 100%); }
 @media (hover: none) {
     .container .card:hover{ transform:none; box-shadow:var(--shadow-sm); border-color:var(--glass-border); }
 }
+.panel-grid {
+    visibility: hidden;
+}
