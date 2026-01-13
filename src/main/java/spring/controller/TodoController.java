@@ -42,27 +42,15 @@ public class TodoController {
     @GetMapping
     public ResponseEntity<?> all(HttpSession session) {
         Long userId = (Long) session.getAttribute("USER_ID");
-
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("success", false, "message", "Non loggato"));
-        }
+        if (userId == null) {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "Non loggato"));}
         List<Todo> todos = service.getTodosByUserId(userId);
         return ResponseEntity.ok(todos);
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<?> update(
-            @RequestBody TodoUpdateRequest request,
-            HttpSession session
-    ) {
+    public ResponseEntity<?> update(@RequestBody TodoUpdateRequest request, HttpSession session) {
         Long userId = (Long) session.getAttribute("USER_ID");
-
-        if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("success", false, "message", "Non loggato"));
-        }
-
+        if (userId == null) {return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "Non loggato"));}
         TodoResponse response = service.updatePartial(request, userId);
         return ResponseEntity.ok(response);
     }

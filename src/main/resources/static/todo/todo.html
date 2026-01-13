@@ -13,15 +13,30 @@
 
 <main class="todo-container">
 
-    <div class="todo-form">
-        <input id="todoTitle" class="todo-title" placeholder="Nuovo task">
-        <textarea id="todoDescription" class="todo-description" placeholder="Descrizione (opzionale)"></textarea>
-        <select id="todoStatus" class="todo-select">
-            <option value="TODO">TODO</option>
-            <option value="IN_PROGRESS">IN PROGRESS</option>
-            <option value="DONE">DONE</option>
-        </select>
-        <button id="saveTodo" type="button" class="save-btn">Salva</button>
+    <div style="margin-bottom:14px; display:flex; justify-content:flex-end;">
+        <button id="addTaskBtn" class="save-btn" type="button">Aggiungi task</button>
+    </div>
+
+    <div class="todo-form card hidden">
+        <div class="form-left">
+            <label for="todoTitle" class="label">Titolo</label>
+            <input id="todoTitle" class="todo-title input" placeholder="Es. Comprare latte">
+            <textarea id="todoDescription" class="todo-description input" placeholder="Dettagli del task..."></textarea>
+        </div>
+
+        <div class="form-right">
+            <div class="field">
+                <label for="todoStatus" class="label">Stato</label>
+                <select id="todoStatus" class="todo-select input">
+                    <option value="TODO">TODO</option>
+                    <option value="IN_PROGRESS">IN PROGRESS</option>
+                    <option value="DONE">DONE</option>
+                </select>
+            </div>
+            <div class="actions-right">
+                <button id="saveTodo" type="button" class="save-btn">Salva</button>
+            </div>
+        </div>
     </div>
 
     <div id="message"></div>
@@ -37,7 +52,6 @@
             </div>
 
             <h3>Inserisci data fine</h3>
-            <!-- quick buttons -->
             <div class="quick-buttons">
                 <button type="button" class="quick-btn" data-add="day">+ 1 giorno</button>
                 <button type="button" class="quick-btn" data-add="week">+ 1 settimana</button>
@@ -45,7 +59,6 @@
                 <button type="button" id="clearChips" class="clear-btn">Reset</button>
             </div>
 
-            <!-- chips area (mostra una "mattoncino" per ogni click) -->
             <div id="chipsContainer" class="chips-container" aria-live="polite"></div>
 
             <label for="endDate">Data fine</label>
@@ -58,10 +71,10 @@
         </div>
     </div>
 
-
     <div id="todoList" class="todo-list"></div>
 </main>
 
+<script src="/api/api.js"></script>
 <script src="/todo/todo.js"></script>
 </body>
 </html>

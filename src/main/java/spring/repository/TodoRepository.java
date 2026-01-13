@@ -11,8 +11,11 @@ import java.util.Optional;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-        List<Todo> findByUserId(Long userId);
+        List<Todo> findByUserIdOrderByDueDateAscPriorityDesc(Long userId);
+
+
         Optional<Todo> findByIdAndUserId(Long id, Long userId);
+
         @Modifying
         @Query("delete from Todo t where t.id = :id and t.userId = :userId")
         int deleteByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);

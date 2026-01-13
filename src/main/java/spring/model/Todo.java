@@ -35,16 +35,22 @@ public class Todo {
 
     private LocalDateTime updatedAt;
 
-    public Todo(Long id, Long userId, String title, String description, Enum.TodoStatus status, Enum.Priority priority, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private LocalDate lastNotificationDate;
+
+    private boolean expired;
+
+    public Todo(Long id, Long userId, String title, String description, Enum.TodoStatus status, Enum.Priority priority, LocalDateTime createdAt, LocalDate dueDate, LocalDateTime updatedAt, LocalDate lastNotificationDate, boolean expired) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.status = status;
         this.priority = priority;
-        this.dueDate = dueDate;
         this.createdAt = createdAt;
+        this.dueDate = dueDate;
         this.updatedAt = updatedAt;
+        this.lastNotificationDate = lastNotificationDate;
+        this.expired = expired;
     }
 
     public Todo() {
@@ -122,6 +128,22 @@ public class Todo {
         this.userId = userId;
     }
 
+    public LocalDate getLastNotificationDate() {
+        return lastNotificationDate;
+    }
+
+    public void setLastNotificationDate(LocalDate lastNotificationDate) {
+        this.lastNotificationDate = lastNotificationDate;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
     @Override
     public String toString() {
         return "Todo{" +
@@ -134,6 +156,8 @@ public class Todo {
                 ", dueDate=" + dueDate +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", lastNotificationDate=" + lastNotificationDate +
+                ", expired=" + expired +
                 '}';
     }
 }

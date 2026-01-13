@@ -1,64 +1,171 @@
+/* =====================
+   THEME & BASE
+   ===================== */
+:root{
+    --bg: #f6f9ff;
+    --card: #ffffff;
+    --accent-600: #2563eb;
+    --accent-400: #2b96f6;
+    --text: #0f172a;
+    --muted: #6b7280;
+    --glass: rgba(15,23,42,0.04);
+    --radius: 12px;
+    --shadow: 0 10px 30px rgba(15,23,42,0.06);
+}
+
+* { box-sizing: border-box; }
+html,body { height:100%; }
 body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    padding: 20px;
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#eef6ff 0%, #fbfdff 100%);
+    color: var(--text);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    font-size:15px;
+    line-height:1.45;
 }
 
+/* container */
 .container {
-    max-width: 500px;
-    margin: auto;
-    background: #fff;
+    max-width: 720px;
+    margin: 36px auto;
     padding: 20px;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,.1);
 }
 
-h1 {
-    margin-top: 0;
+/* header */
+.header {
+    margin-bottom: 14px;
+}
+.header h1 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: 0.2px;
+}
+.header .subtitle {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 13px;
 }
 
+/* form card */
+.form {
+    background: linear-gradient(180deg,var(--card), #fff);
+    border-radius: var(--radius);
+    padding: 16px;
+    border: 1px solid var(--glass);
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 12px;
+}
+
+/* rows and grid */
+.row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* two columns layout (dates) */
+.two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* labels */
 label {
-    display: block;
-    margin-top: 12px;
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
 }
 
-input, textarea, select {
+/* inputs */
+input[type="text"],
+input[type="date"],
+textarea,
+select {
     width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(15,23,42,0.06);
+    background: #fff;
+    color: var(--text);
+    font-size: 14px;
+    transition: box-shadow .12s, transform .06s, border-color .12s;
+    outline: none;
+    min-height: 40px;
 }
 
+/* textarea */
 textarea {
+    min-height: 90px;
     resize: vertical;
-    min-height: 80px;
+    padding-top: 10px;
 }
 
+/* focus */
+input:focus, textarea:focus, select:focus {
+    box-shadow: 0 10px 26px rgba(43,150,246,0.08);
+    border-color: rgba(43,150,246,0.9);
+    transform: translateY(-1px);
+}
+
+/* actions area: save bottom-right */
 .actions {
-    margin-top: 20px;
     display: flex;
     gap: 10px;
+    justify-content: flex-end;
+    margin-top: 6px;
 }
 
-button {
-    padding: 10px;
-    flex: 1;
+/* buttons */
+.btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:10px 14px;
+    border-radius: 10px;
+    font-weight:800;
     cursor: pointer;
+    border:1px solid transparent;
 }
 
-button.save {
-    background: #4CAF50;
-    color: white;
-    border: none;
+/* primary save */
+.btn-primary, .save {
+    background: linear-gradient(90deg,var(--accent-600),var(--accent-400));
+    color: #fff;
+    border-color: rgba(43,150,246,0.12);
+    min-width: 120px;
+    box-shadow: 0 8px 26px rgba(43,150,246,0.10);
+}
+.btn-primary:hover { transform: translateY(-3px); }
+
+/* outline cancel */
+.btn-outline, .cancel {
+    background: transparent;
+    border: 1px solid rgba(15,23,42,0.06);
+    color: var(--muted);
+    padding: 9px 12px;
 }
 
-button.cancel {
-    background: #ccc;
-    border: none;
-}
-
+/* message */
 .message {
-    margin-top: 10px;
+    margin-top: 6px;
     min-height: 18px;
+    font-size: 14px;
 }
+
+/* small responsive tweaks */
+@media (max-width: 620px) {
+    .container { padding: 12px; margin: 18px auto; }
+    .two-cols { grid-template-columns: 1fr; }
+    .actions { justify-content: stretch; flex-direction: column-reverse; }
+    .btn-primary { width: 100%; }
+    .btn-outline { width: 100%; }
+}
+
+/* subtle helpers */
+.small { font-size: 13px; color: var(--muted); }
+.hidden { display:none !important; }

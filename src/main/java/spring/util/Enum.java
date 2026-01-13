@@ -9,10 +9,11 @@ public class Enum {
     }
 
     public enum Priority {
-        LOW,
+        HIGH,
         MEDIUM,
-        HIGH
+        LOW
     }
+
 
 
 }

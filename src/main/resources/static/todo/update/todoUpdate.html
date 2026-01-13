@@ -10,29 +10,52 @@
 <body>
 
 <div class="container">
-  <h1>Modifica Todo</h1>
+  <header class="header">
+    <h1>Modifica Todo</h1>
+    <p class="subtitle">Aggiorna i dettagli del task</p>
+  </header>
 
-  <label for="title">Titolo</label>
-  <input id="title" type="text">
+  <form id="todoForm" class="form" autocomplete="off" novalidate>
+    <div class="row">
+      <label for="title">Titolo</label>
+      <input id="title" name="title" type="text" required placeholder="Es. Comprare latte">
+    </div>
 
-  <label for="description">Descrizione</label>
-  <textarea id="description"></textarea>
+    <div class="row">
+      <label for="description">Descrizione</label>
+      <textarea id="description" name="description" placeholder="Dettagli del task..."></textarea>
+    </div>
 
-  <label for="status">Stato</label>
-  <select id="status">
-    <option value="TODO">TODO</option>
-    <option value="IN_PROGRESS">IN PROGRESS</option>
-    <option value="DONE">DONE</option>
-  </select>
+    <div class="row two-cols">
+      <div class="col">
+        <label for="startDate">Data di inizio</label>
+        <input id="startDate" name="startDate" type="date">
+      </div>
+      <div class="col">
+        <label for="dueDate">Data di fine</label>
+        <input id="dueDate" name="dueDate" type="date">
+      </div>
+    </div>
 
-  <div class="actions">
-    <button class="save" id="saveBtn">Salva</button>
-    <button class="cancel" id="cancelBtn">Annulla</button>
-  </div>
+    <div class="row">
+      <label for="status">Stato</label>
+      <select id="status" name="status">
+        <option value="TODO">TODO</option>
+        <option value="IN_PROGRESS">IN PROGRESS</option>
+        <option value="DONE">DONE</option>
+      </select>
+    </div>
 
-  <div class="message" id="message"></div>
+    <div class="actions">
+      <button class="btn btn-primary save" id="saveBtn" type="button">Salva</button>
+      <button class="btn btn-outline cancel" id="cancelBtn" type="button">Annulla</button>
+    </div>
+
+    <div class="message" id="message" aria-live="polite"></div>
+  </form>
 </div>
 
-<script src="todoUpdate.js"></script>
+<script src="/api/api.js"></script>
+<script src="/todo/update/todoUpdate.js"></script>
 </body>
 </html>

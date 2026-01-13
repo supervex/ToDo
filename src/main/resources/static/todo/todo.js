@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
     console.log("todo.js caricato");
-
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const todoForm = document.querySelector('.todo-form');
     const title = document.getElementById('todoTitle');
     const descriptionInput = document.getElementById('todoDescription');
     const statusSelect = document.getElementById('todoStatus');
@@ -23,6 +24,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     // priority buttons
     const priorityButtons = document.querySelectorAll('.priority-btn');
 
+    function showForm(show = true) {
+        if (!todoForm || !addTaskBtn) return;
+        if (show) {
+            todoForm.classList.remove('hidden');
+            addTaskBtn.innerText = 'Chiudi';
+            setTimeout(() => {
+                const t = document.getElementById('todoTitle');
+                if (t) { t.focus(); t.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            }, 100);
+        } else {
+            todoForm.classList.add('hidden');
+            addTaskBtn.innerText = 'Aggiungi task';
+            const t = document.getElementById('todoTitle');
+            if (t) t.value = '';
+            const d = document.getElementById('todoDescription');
+            if (d) d.value = '';
+            const s = document.getElementById('todoStatus');
+            if (s) s.value = 'TODO';
+        }
+    }
+
+    if (addTaskBtn) {
+        addTaskBtn.addEventListener('click', () => {
+            const hidden = todoForm && todoForm.classList.contains('hidden');
+            showForm(hidden);
+        });
+    }
     // sanity checks
     if (!dateModal || !saveBtn || !confirmBtn || !cancelBtn) {
         console.error('Elementi DOM mancanti, todo.js abortito');
@@ -32,7 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     dateModal.classList.add('hidden');
 
     let pendingTodo = null;
-
 
     let chips = [];
     let chipIdCounter = 1;
@@ -198,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         saveBtn.disabled = true;
     });
 
-    confirmBtn.addEventListener('click', () => {
+    confirmBtn.addEventListener('click', async () => {
 
         const dueDate = endDateInput.value; // formato yyyy-mm-dd
         if (!dueDate) {
@@ -214,39 +241,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             priority: selectedPriority
         };
 
-
-        fetch('/api/todos/createTodo', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        })
-            .then(res => {
-                if (!res.ok) throw new Error('Server response ' + res.status);
-                return res.json();
-            })
-            .then(response => {
-                if (response.success) {
-                    messageDiv.innerText = response.message || 'Salvato';
-                    messageDiv.style.color = 'green';
-                    title.value = '';
-                    descriptionInput.value = '';
-                    fetchTodos();
-                } else {
-                    messageDiv.innerText = response.message || 'Errore';
-                    messageDiv.style.color = 'red';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                messageDiv.innerText = 'Errore: ' + err.message;
+        try {
+            const response = await window.api.createTodo(body);
+            if (response.success) {
+                messageDiv.innerText = response.message || 'Salvato';
+                messageDiv.style.color = 'green';
+                title.value = '';
+                descriptionInput.value = '';
+                await window.api.fetchTodos(); // backend potrebbe creare notifiche; ma ora ricarichiamo la lista locale
+                // aggiorna UI
+                await reloadTodosToUI();
+            } else {
+                messageDiv.innerText = response.message || 'Errore';
                 messageDiv.style.color = 'red';
-            })
-            .finally(() => {
-                dateModal.classList.add('hidden');
-                pendingTodo = null;
-                saveBtn.disabled = false;
-                clearAllChips();
-            });
+            }
+        } catch (err) {
+            console.error(err);
+            messageDiv.innerText = 'Errore: ' + err.message;
+            messageDiv.style.color = 'red';
+        } finally {
+            dateModal.classList.add('hidden');
+            pendingTodo = null;
+            saveBtn.disabled = false;
+            clearAllChips();
+        }
     });
 
     cancelBtn.addEventListener('click', () => {
@@ -257,29 +275,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     endDateInput.addEventListener('input', () => {
+        // optional: puoi sincronizzare chips live se vuoi
     });
 
-    function fetchTodos() {
-        fetch('/api/todos')
-            .then(res => {
-                if (!res.ok) throw new Error('GET /api/todos ' + res.status);
-                return res.json();
-            })
-            .then(todos => {
-                todoList.innerHTML = '';
-                todos.forEach(addTodoToList);
-            })
-            .catch(err => {
-                console.error(err);
-            });
+    async function reloadTodosToUI() {
+        try {
+            const todos = await window.api.fetchTodos();
+            todoList.innerHTML = '';
+            todos.forEach(addTodoToList);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     function addTodoToList(todo) {
         const row = document.createElement('div');
         row.className = 'todo-row';
 
-        const due = todo.dueDate ? ` - ${todo.dueDate}` : '';
+        function formatDateDMY(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (isNaN(d)) return escapeHtml(dateStr);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
 
+        const dueHtml = todo.dueDate
+            ? `<span class="due-date">${escapeHtml(formatDateDMY(todo.dueDate))}</span>`
+            : `<span class="due-date due-empty">—</span>`;
+
+        // priority badge
         let badgeHtml = '';
         if (todo.priority) {
             const p = String(todo.priority).toUpperCase();
@@ -291,27 +318,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         const descHtml = todo.description ? `<div class="todo-desc">${escapeHtml(todo.description)}</div>` : '';
 
         const actionsHtml = `
-          <div class="todo-actions">
-            <button class="edit-btn" data-id="${todo.id}">Apri</button>
-            <button class="delete-btn" data-id="${todo.id}">Elimina</button>
-          </div>
-        `;
+      <div class="todo-actions">
+        <button class="edit-btn" data-id="${todo.id}">Apri</button>
+        <button class="delete-btn" data-id="${todo.id}">Elimina</button>
+      </div>
+    `;
 
         row.innerHTML = `
-          <div>
-            ${badgeHtml}
-            <span class="todo-title">${escapeHtml(todo.title)}${due}</span>
-            ${descHtml}
-          </div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <select class="status-select" data-id="${todo.id}">
-               <option value="TODO" ${todo.status === 'TODO' ? 'selected' : ''}>TODO</option>
-               <option value="IN_PROGRESS" ${todo.status === 'IN_PROGRESS' ? 'selected' : ''}>IN PROGRESS</option>
-               <option value="DONE" ${todo.status === 'DONE' ? 'selected' : ''}>DONE</option>
-           </select>
-            ${actionsHtml}
-          </div>
-        `;
+      <div class="todo-main">
+        ${badgeHtml}
+        <span class="todo-title">${escapeHtml(todo.title)}</span>
+        ${descHtml}
+      </div>
+
+      <div class="todo-meta" style="display:flex; align-items:center; gap:12px;">
+        ${dueHtml}
+        <select class="status-select" data-id="${todo.id}">
+           <option value="TODO" ${todo.status === 'TODO' ? 'selected' : ''}>TODO</option>
+           <option value="IN_PROGRESS" ${todo.status === 'IN_PROGRESS' ? 'selected' : ''}>IN PROGRESS</option>
+           <option value="DONE" ${todo.status === 'DONE' ? 'selected' : ''}>DONE</option>
+        </select>
+        ${actionsHtml}
+      </div>
+    `;
         todoList.appendChild(row);
     }
 
@@ -320,35 +349,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
     }
 
-    todoList.addEventListener('change', (e) => {
+    todoList.addEventListener('change', async (e) => {
         const select = e.target.closest('.status-select');
         if (!select) return;
 
         const todoId = select.dataset.id;
         const newStatus = select.value;
 
-        fetch('/api/todos/update-status', {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'same-origin',
-            body: JSON.stringify({
-                id: todoId,
-                status: newStatus
-            })
-        })
-            .then(res => {
-                if (!res.ok) throw new Error('Errore aggiornamento stato');
-                return res.json();
-            })
-            .then(() => {
-                messageDiv.innerText = 'Stato aggiornato';
-                messageDiv.style.color = 'green';
-            })
-            .catch(err => {
-                console.error(err);
-                messageDiv.innerText = 'Errore aggiornamento stato';
-                messageDiv.style.color = 'red';
-            });
+        try {
+            await window.api.updateTodoStatus(todoId, newStatus);
+            messageDiv.innerText = 'Stato aggiornato';
+            messageDiv.style.color = 'green';
+        } catch (err) {
+            console.error(err);
+            messageDiv.innerText = 'Errore aggiornamento stato';
+            messageDiv.style.color = 'red';
+        }
     });
 
     todoList.addEventListener('click', (e) => {
@@ -356,40 +372,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!btn) return;
 
         const todoId = btn.dataset.id;
-
         window.location.href = `update/todoUpdate.html?id=${todoId}`;
     });
 
-    todoList.addEventListener('click', (e) => {
+    todoList.addEventListener('click', async (e) => {
         const btn = e.target.closest('.delete-btn');
         if (!btn) return;
         if (!confirm('Vuoi eliminare questo task?')) return;
 
         const todoId = btn.dataset.id;
 
-        fetch(`/api/todos/${todoId}`, {
-            method: 'DELETE',
-            credentials: 'same-origin',
-        })
-            .then(res => {
-                if (!res.ok) throw new Error('Errore delete');
-                return res.json();
-            })
-            .then(() => {
-                const row = btn.closest('.todo-row');
-                if (row) row.remove();
+        try {
+            await window.api.deleteTodo(todoId);
+            const row = btn.closest('.todo-row');
+            if (row) row.remove();
 
-                messageDiv.innerText = 'Eliminato con successo';
-                messageDiv.style.color = 'green';
-            })
-            .catch(err => {
-                console.error(err);
-                messageDiv.innerText = 'Errore delete';
-                messageDiv.style.color = 'red';
-            });
+            messageDiv.innerText = 'Eliminato con successo';
+            messageDiv.style.color = 'green';
+        } catch (err) {
+            console.error(err);
+            messageDiv.innerText = 'Errore delete';
+            messageDiv.style.color = 'red';
+        }
     });
 
     // avvio
-    fetchTodos();
+    await reloadTodosToUI();
 
 });

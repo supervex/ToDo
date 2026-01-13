@@ -9,6 +9,7 @@ import spring.model.Todo;
 import spring.repository.TodoRepository;
 import spring.util.Enum;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +19,12 @@ public class TodoService {
 
 
     private final TodoRepository todoRepository;
+    private final NotificationService notificationService;
     private final HttpSession httpSession;
 
-    public TodoService(TodoRepository todoRepository, HttpSession httpSession) {
+    public TodoService(TodoRepository todoRepository, NotificationService notificationService, HttpSession httpSession) {
         this.todoRepository = todoRepository;
+        this.notificationService = notificationService;
         this.httpSession = httpSession;
     }
 
@@ -37,10 +40,32 @@ public class TodoService {
     }
 
     public List<Todo> getTodosByUserId(Long userId) {
-        return todoRepository.findByUserId(userId);
+        List<Todo> todos = todoRepository.findByUserIdOrderByDueDateAscPriorityDesc(userId);
+
+        LocalDate today = LocalDate.now();
+        LocalDate limitDate = today.plusDays(3);
+        for (Todo todo : todos) {
+            LocalDate dueDate = todo.getDueDate();
+            boolean isExpired = dueDate.isBefore(today);
+            todo.setExpired(isExpired);
+            boolean isDueSoon = !isExpired && !dueDate.isAfter(limitDate);
+
+            LocalDate lastNotified = todo.getLastNotificationDate();
+            boolean alreadyNotifiedToday =
+                    lastNotified != null && lastNotified.isEqual(today);
+
+            if (alreadyNotifiedToday) continue;
+
+            if (isExpired || isDueSoon) {
+                notificationService.createNotification(todo);
+                todo.setLastNotificationDate(today);
+            }
+        }
+        todoRepository.saveAll(todos);
+        return todos;
     }
 
-    public TodoResponse updatePartial(TodoUpdateRequest request, Long userId) {
+        public TodoResponse updatePartial(TodoUpdateRequest request, Long userId) {
         Optional<Todo> existingOpt =
                 todoRepository.findByIdAndUserId(request.getId(), userId);
         if (existingOpt.isEmpty()) {

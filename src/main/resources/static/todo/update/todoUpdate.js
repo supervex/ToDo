@@ -9,31 +9,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageDiv = document.getElementById('message');
     const saveBtn = document.getElementById('saveBtn');
     const cancelBtn = document.getElementById('cancelBtn');
+    const dueDateInput = document.getElementById('dueDate');
+    const startDate = document.getElementById('startDate');
 
     if (!todoId) {
-        messageDiv.innerText = 'ID todo mancante';
-        messageDiv.style.color = 'red';
+        if (messageDiv) {
+            messageDiv.innerText = 'ID todo mancante';
+            messageDiv.style.color = 'red';
+        }
         return;
     }
 
-    fetch(`/api/todos/${todoId}`, {
-        credentials: 'same-origin'
-    })
-        .then(res => {
-            if (!res.ok) throw new Error('Todo non trovato');
-            return res.json();
-        })
+    window.api.getTodoById(todoId)
         .then(todo => {
-            titleInput.value = todo.title;
+            if (!titleInput) return;
+            titleInput.value = todo.title || '';
             descriptionInput.value = todo.description || '';
             statusSelect.value = todo.status;
+            dueDateInput.value = todo.dueDate || '';
+            startDate.value = toDateInputValue(todo.createdAt);
         })
         .catch(err => {
-            messageDiv.innerText = err.message;
-            messageDiv.style.color = 'red';
+            if (messageDiv) {
+                messageDiv.innerText = err.message;
+                messageDiv.style.color = 'red';
+            }
         });
 
-    saveBtn.addEventListener('click', () => {
+    saveBtn?.addEventListener('click', () => {
 
         const body = {
             title: titleInput.value.trim(),
@@ -48,16 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        fetch(`/api/todos/update`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'same-origin',
-            body: JSON.stringify(body)
-        })
-            .then(res => {
-                if (!res.ok) throw new Error('Errore salvataggio');
-                return res.json();
-            })
+        window.api.updateTodo(body)
             .then(() => {
                 messageDiv.innerText = 'Todo aggiornato';
                 messageDiv.style.color = 'green';
@@ -72,8 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
-    cancelBtn.addEventListener('click', () => {
+    cancelBtn?.addEventListener('click', () => {
         window.location.href = '/todo/todo.html';
     });
 
+    function toDateInputValue(dateString) {
+        if (!dateString) return '';
+        return new Date(dateString).toISOString().split('T')[0];
+    }
 });

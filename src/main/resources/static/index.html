@@ -4,33 +4,91 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Dashboard - Todo</title>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Style -->
     <link rel="stylesheet" href="/index.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chart (se ti serve) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 <body>
 
-<header class="topbar">
-    <h1>BENVENUTO</h1>
+<header class="topbar" role="banner">
+    <div class="brand">
+        <h1>BENVENUTO</h1>
+        <p class="subtitle">La tua dashboard</p>
+    </div>
 
-    <div class="topbar-right">
-        <button id="adminBtn" class="admin-btn">admin</button>
-        <input class="search" placeholder="Cerca..." />
-        <button id="loginBtn" class="login-btn">Login</button>
-        <button id="logoutBtn" class="login-btn hidden">Logout</button>
+    <div class="topbar-right" role="navigation" aria-label="Azioni principali">
+        <button id="adminBtn" class="btn btn-ghost" title="Pannello admin">Admin</button>
+
+        <label class="search-wrap" for="searchInput" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5" fill="none"></circle></svg>
+            <input id="searchInput" class="search" placeholder="Cerca..." />
+        </label>
+        <button id="notificationBtn" class="notification-btn" aria-label="Notifiche">
+            <svg class="bell-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      fill="none"/>
+                <path d="M9 17a3 3 0 006 0"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      fill="none"/>
+            </svg>
+            <span id="notificationBadge" class="notification-badge hidden">0</span>
+        </button>
+        <button id="loginBtn" class="btn btn-primary">Login</button>
+        <button id="logoutBtn" class="btn btn-outline hidden">Logout</button>
     </div>
 </header>
 
-<main class="container">
-    <section class="left">
-        <div class="grid">
-            <button class="card" data-action="todo">TODO</button>
-            <button class="card">DIARIO</button>
-            <button class="card">SITI</button>
-            <button class="card">GIOCHI</button>
+<main class="container" role="main">
+    <section class="panel">
+        <div class="panel-grid">
+            <button class="card" data-action="todo" aria-label="Apri Todo">
+                <div class="card-top">
+                    <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11h6M9 15h6M5 7h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    <span class="card-title">TODO</span>
+                </div>
+                <p class="card-sub">Gestisci attività, scadenze e priorità</p>
+            </button>
+
+            <button class="card" aria-label="Diario">
+                <div class="card-top">
+                    <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h10M7 12h10M7 16h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    <span class="card-title">DIARIO</span>
+                </div>
+                <p class="card-sub">Annotazioni giornaliere</p>
+            </button>
+
+            <button class="card" aria-label="Siti">
+                <div class="card-top">
+                    <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    <span class="card-title">SITI</span>
+                </div>
+                <p class="card-sub">Collegamenti utili</p>
+            </button>
+
+            <button class="card" aria-label="Giochi">
+                <div class="card-top">
+                    <svg class="card-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12c0-3 2-4 6-4s6 1 6 4-2 4-6 4S6 15 6 12z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    <span class="card-title">GIOCHI</span>
+                </div>
+                <p class="card-sub">Divertimento veloce</p>
+            </button>
         </div>
     </section>
 </main>
-
-<script src="/index.js"></script>
+<script src="api/api.js" defer></script>
+<script src="/index.js" defer></script>
 </body>
 </html>
