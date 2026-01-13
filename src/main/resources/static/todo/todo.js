@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const chipsContainer = document.getElementById('chipsContainer');
     const clearChipsBtn = document.getElementById('clearChips');
 
+    const doneList = document.getElementById('doneList');
+    const doneCount = document.getElementById('doneCount');
+
     // priority buttons
     const priorityButtons = document.querySelectorAll('.priority-btn');
 
@@ -254,7 +257,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 messageDiv.style.color = 'green';
                 title.value = '';
                 descriptionInput.value = '';
-                await window.api.fetchTodos(); // backend potrebbe creare notifiche; ma ora ricarichiamo la lista locale
                 // aggiorna UI
                 await reloadTodosToUI();
             } else {
@@ -284,29 +286,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         // optional: puoi sincronizzare chips live se vuoi
     });
 
-    async function reloadTodosToUI() {
-        try {
-            const todos = await window.api.fetchTodos();
-            todoList.innerHTML = '';
-            todos.forEach(addTodoToList);
-        } catch (err) {
-            console.error(err);
-        }
+    // helper per formato data
+    function formatDateDMY(dateStr) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        if (isNaN(d)) return escapeHtml(dateStr);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
     }
 
-    function addTodoToList(todo) {
+    // escape HTML
+    function escapeHtml(s) {
+        if (!s) return '';
+        return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+    }
+
+    // --- funzione che aggiunge una riga in un container (todoList o doneList)
+    function addTodoToList(todo, container = todoList) {
         const row = document.createElement('div');
         row.className = 'todo-row';
-
-        function formatDateDMY(dateStr) {
-            if (!dateStr) return '';
-            const d = new Date(dateStr);
-            if (isNaN(d)) return escapeHtml(dateStr);
-            const day = String(d.getDate()).padStart(2, '0');
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const year = d.getFullYear();
-            return `${day}/${month}/${year}`;
-        }
 
         const dueHtml = todo.dueDate
             ? `<span class="due-date">${escapeHtml(formatDateDMY(todo.dueDate))}</span>`
@@ -324,38 +324,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         const descHtml = todo.description ? `<div class="todo-desc">${escapeHtml(todo.description)}</div>` : '';
 
         const actionsHtml = `
-      <div class="todo-actions">
-        <button class="edit-btn" data-id="${todo.id}">Apri</button>
-        <button class="delete-btn" data-id="${todo.id}">Elimina</button>
-      </div>
-    `;
+          <div class="todo-actions">
+            <button class="edit-btn" data-id="${todo.id}">Apri</button>
+            <button class="delete-btn" data-id="${todo.id}">Elimina</button>
+          </div>
+        `;
 
         row.innerHTML = `
-      <div class="todo-main">
-        ${badgeHtml}
-        <span class="todo-title">${escapeHtml(todo.title)}</span>
-        ${descHtml}
-      </div>
+          <div class="todo-main">
+            ${badgeHtml}
+            <span class="todo-title">${escapeHtml(todo.title)}</span>
+            ${descHtml}
+          </div>
 
-      <div class="todo-meta" style="display:flex; align-items:center; gap:12px;">
-        ${dueHtml}
-        <select class="status-select" data-id="${todo.id}">
-           <option value="TODO" ${todo.status === 'TODO' ? 'selected' : ''}>TODO</option>
-           <option value="IN_PROGRESS" ${todo.status === 'IN_PROGRESS' ? 'selected' : ''}>IN PROGRESS</option>
-           <option value="DONE" ${todo.status === 'DONE' ? 'selected' : ''}>DONE</option>
-        </select>
-        ${actionsHtml}
-      </div>
-    `;
-        todoList.appendChild(row);
+          <div class="todo-meta" style="display:flex; align-items:center; gap:12px;">
+            ${dueHtml}
+            <select class="status-select" data-id="${todo.id}">
+               <option value="TODO" ${todo.status === 'TODO' ? 'selected' : ''}>TODO</option>
+               <option value="IN_PROGRESS" ${todo.status === 'IN_PROGRESS' ? 'selected' : ''}>IN PROGRESS</option>
+               <option value="DONE" ${todo.status === 'DONE' ? 'selected' : ''}>DONE</option>
+            </select>
+            ${actionsHtml}
+          </div>
+        `;
+        container.appendChild(row);
     }
 
-    function escapeHtml(s) {
-        if (!s) return '';
-        return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+    // reload che carica due chiamate distinte (attivi e done)
+    async function reloadTodosToUI() {
+        try {
+            // Attivi: TODO + IN_PROGRESS
+            const activeTodos = await window.api.fetchTodosByStatuses(['TODO', 'IN_PROGRESS']);
+            todoList.innerHTML = '';
+            activeTodos.forEach(t => addTodoToList(t, todoList));
+
+            // Done
+            const doneTodos = await window.api.fetchTodosByStatuses(['DONE']);
+            if (doneList) {
+                doneList.innerHTML = '';
+                doneTodos.forEach(t => addTodoToList(t, doneList));
+            }
+            if (doneCount) doneCount.innerText = String(doneTodos.length);
+        } catch (err) {
+            console.error(err);
+            messageDiv.innerText = 'Errore caricamento todo';
+            messageDiv.style.color = 'red';
+        }
     }
 
-    todoList.addEventListener('change', async (e) => {
+    // delega globale per change (cattura anche le select dentro doneList)
+    document.addEventListener('change', async (e) => {
         const select = e.target.closest('.status-select');
         if (!select) return;
 
@@ -366,6 +384,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             await window.api.updateTodoStatus(todoId, newStatus);
             messageDiv.innerText = 'Stato aggiornato';
             messageDiv.style.color = 'green';
+            await reloadTodosToUI();
         } catch (err) {
             console.error(err);
             messageDiv.innerText = 'Errore aggiornamento stato';
@@ -373,32 +392,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    todoList.addEventListener('click', (e) => {
-        const btn = e.target.closest('.edit-btn');
-        if (!btn) return;
+    // delega globale per click (edit, delete)
+    document.addEventListener('click', async (e) => {
+        const openBtn = e.target.closest('.edit-btn');
+        if (openBtn) {
+            const todoId = openBtn.dataset.id;
+            window.location.href = `update/todoUpdate.html?id=${todoId}`;
+            return;
+        }
 
-        const todoId = btn.dataset.id;
-        window.location.href = `update/todoUpdate.html?id=${todoId}`;
-    });
-
-    todoList.addEventListener('click', async (e) => {
-        const btn = e.target.closest('.delete-btn');
-        if (!btn) return;
-        if (!confirm('Vuoi eliminare questo task?')) return;
-
-        const todoId = btn.dataset.id;
-
-        try {
-            await window.api.deleteTodo(todoId);
-            const row = btn.closest('.todo-row');
-            if (row) row.remove();
-
-            messageDiv.innerText = 'Eliminato con successo';
-            messageDiv.style.color = 'green';
-        } catch (err) {
-            console.error(err);
-            messageDiv.innerText = 'Errore delete';
-            messageDiv.style.color = 'red';
+        const delBtn = e.target.closest('.delete-btn');
+        if (delBtn) {
+            if (!confirm('Vuoi eliminare questo task?')) return;
+            const todoId = delBtn.dataset.id;
+            try {
+                await window.api.deleteTodo(todoId);
+                messageDiv.innerText = 'Eliminato con successo';
+                messageDiv.style.color = 'green';
+                await reloadTodosToUI();
+            } catch (err) {
+                console.error(err);
+                messageDiv.innerText = 'Errore delete';
+                messageDiv.style.color = 'red';
+            }
+            return;
         }
     });
 

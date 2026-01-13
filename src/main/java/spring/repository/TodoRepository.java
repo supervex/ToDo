@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import spring.model.Todo;
+import spring.util.Enum;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
         List<Todo> findByUserIdOrderByDueDateAscPriorityDesc(Long userId);
 
+        List<Todo> findByUserIdAndStatusInOrderByDueDateAscPriorityDesc(Long userId, List<Enum.TodoStatus> statuses);
 
         Optional<Todo> findByIdAndUserId(Long id, Long userId);
 

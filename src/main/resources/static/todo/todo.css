@@ -190,13 +190,20 @@ body {
 .todo-container .todo-actions .delete-btn { color: var(--coral-500); border-color: rgba(255,107,107,0.08); }
 
 .todo-container .priority-badge {
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:999px;
-  font-weight:700;
-  font-size:12px;
-  margin-right:8px;
+  display: inline-flex;           /* permette di usare align-items e justify-content */
+  align-items: center;            /* centra verticalmente */
+  justify-content: center;        /* centra orizzontalmente */
+  width: 70px;                    /* larghezza fissa */
+  height: 28px;                   /* altezza fissa */
+  border-radius: 12px;            /* mantiene i bordi arrotondati */
+  font-weight: 700;
+  font-size: 12px;
+  margin-right: 8px;
+  text-align: center;
+  padding: 0;                     /* il padding non serve più */
 }
+
+
 .todo-container .priority-badge.low { background:#ecfdf5; color:#065f46; border:1px solid #bbf7d0; }
 .todo-container .priority-badge.medium { background:#fff7ed; color:#92400e; border:1px solid #ffd8a8; }
 .todo-container .priority-badge.high { background:#fff1f2; color:#7f1d1d; border:1px solid #fda4af; }
@@ -275,4 +282,47 @@ body {
   .todo-container .form-right { width:100%; }
   .todo-container .todo-meta { gap:8px; }
   .todo-container .save-btn { width:100%; }
+}
+/* DONE SECTION */
+.todo-container .done-section {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(248,250,252,0.98));
+  border: 1px solid rgba(15,23,42,0.03);
+  box-shadow: var(--shadow-sm);
+}
+
+/* titolo */
+.todo-container .done-section h3 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  font-weight: 800;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+}
+
+/* lista dei completati: righe più "smorzate" */
+.todo-container #doneList .todo-row {
+  background: transparent;
+  opacity: 0.85;
+}
+.todo-container #doneList .todo-title {
+  text-decoration: line-through;
+  color: var(--muted-2);
+  font-weight:700;
+}
+
+/* badge priorità per completati mantenute ma meno evidenti */
+.todo-container #doneList .priority-badge {
+  opacity: 0.9;
+  filter: saturate(0.9);
+}
+
+/* pulsante ripristina (per riportare a TODO) */
+.todo-container .restore-btn {
+  color: var(--violet-500);
+  border-color: rgba(124,58,237,0.06);
 }

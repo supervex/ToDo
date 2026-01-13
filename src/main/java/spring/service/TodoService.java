@@ -11,6 +11,7 @@ import spring.util.Enum;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,32 +38,6 @@ public class TodoService {
         } catch (Exception e) {
             return new TodoResponse( "Errore durante il salvataggio: " + e.getMessage(),false );
         }
-    }
-
-    public List<Todo> getTodosByUserId(Long userId) {
-        List<Todo> todos = todoRepository.findByUserIdOrderByDueDateAscPriorityDesc(userId);
-
-        LocalDate today = LocalDate.now();
-        LocalDate limitDate = today.plusDays(3);
-        for (Todo todo : todos) {
-            LocalDate dueDate = todo.getDueDate();
-            boolean isExpired = dueDate.isBefore(today);
-            todo.setExpired(isExpired);
-            boolean isDueSoon = !isExpired && !dueDate.isAfter(limitDate);
-
-            LocalDate lastNotified = todo.getLastNotificationDate();
-            boolean alreadyNotifiedToday =
-                    lastNotified != null && lastNotified.isEqual(today);
-
-            if (alreadyNotifiedToday) continue;
-
-            if (isExpired || isDueSoon) {
-                notificationService.createNotification(todo);
-                todo.setLastNotificationDate(today);
-            }
-        }
-        todoRepository.saveAll(todos);
-        return todos;
     }
 
         public TodoResponse updatePartial(TodoUpdateRequest request, Long userId) {
@@ -114,6 +89,37 @@ public class TodoService {
         return todoRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() ->
                         new RuntimeException("Todo non trovato o non autorizzato"));
+    }
+
+    public List<Todo> findAllByStatuses(List<Enum.TodoStatus> statuses, Long userId) {
+        List<Todo> todos = todoRepository.findByUserIdAndStatusInOrderByDueDateAscPriorityDesc(userId, statuses);
+
+        LocalDate today = LocalDate.now();
+        LocalDate limitDate = today.plusDays(3);
+        List<Todo> toSave = new ArrayList<>();
+        for (Todo todo : todos) {
+            LocalDate dueDate = todo.getDueDate();
+            boolean isExpired = dueDate.isBefore(today);
+            if (todo.isExpired() != isExpired) {
+                todo.setExpired(isExpired);
+                toSave.add(todo);
+            }
+
+            boolean isDueSoon = !isExpired && !dueDate.isAfter(limitDate);
+            LocalDate lastNotified = todo.getLastNotificationDate();
+            boolean alreadyNotifiedToday = lastNotified != null && lastNotified.isEqual(today);
+
+            if (!alreadyNotifiedToday && (isExpired || isDueSoon)) {
+                notificationService.createNotification(todo);
+                todo.setLastNotificationDate(today);
+                toSave.add(todo);
+            }
+        }
+
+        if (!toSave.isEmpty()) {
+            todoRepository.saveAll(toSave);
+        }
+        return todos;
     }
 
 }

@@ -112,7 +112,17 @@ async function markNotificationsAsRead(notificationIds) {
     if (!res.ok) throw new Error(`/api/notifications/read - ${res.status}`);
     return res.json();
 }
+// ---------------------------
+// TODOS by status (lista)
+// ---------------------------
+async function fetchTodosByStatuses(statuses) {
+    if (!statuses || statuses.length === 0) {
+        throw new Error('Almeno uno status richiesto');
+    }
 
+    const query = statuses.map(s => `status=${encodeURIComponent(s)}`).join('&');
+    return getJSON(`/api/todos/status?${query}`);
+}
 
 // ---------------------------
 // Esporta tutte le funzioni globalmente
@@ -122,7 +132,7 @@ window.api = {
     fetchUser,
     loginUser,
     logoutUser,
-    fetchTodos,
+    fetchTodosByStatuses,
     createTodo,
     updateTodoStatus,
     getTodoById,
