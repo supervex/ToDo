@@ -23,21 +23,15 @@
   --gutter: 16px;
 }
 
-/* =====================
-   RESET / BASE
-   ===================== */
 * { box-sizing: border-box; }
 
-/* page background only */
+
 body {
   margin: 0;
   padding: 0;
   background: var(--bg);
 }
 
-/* =====================
-   SCOPE: everything below applies only inside .todo-container
-   ===================== */
 .todo-container {
   /* font + color local to todo page so topbar keeps its own styles */
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -190,17 +184,17 @@ body {
 .todo-container .todo-actions .delete-btn { color: var(--coral-500); border-color: rgba(255,107,107,0.08); }
 
 .todo-container .priority-badge {
-  display: inline-flex;           /* permette di usare align-items e justify-content */
-  align-items: center;            /* centra verticalmente */
-  justify-content: center;        /* centra orizzontalmente */
-  width: 70px;                    /* larghezza fissa */
-  height: 28px;                   /* altezza fissa */
-  border-radius: 12px;            /* mantiene i bordi arrotondati */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 28px;
+  border-radius: 12px;
   font-weight: 700;
   font-size: 12px;
   margin-right: 8px;
   text-align: center;
-  padding: 0;                     /* il padding non serve più */
+  padding: 0;
 }
 
 
@@ -274,9 +268,6 @@ body {
 .todo-container .modal-actions button { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
 .todo-container .modal-actions button:first-child { background:var(--blue-600); color:#fff; }
 
-/* =====================
-   RESPONSIVE
-   ===================== */
 @media (max-width: 820px) {
   .todo-container .todo-form.card { grid-template-columns: 1fr; padding:12px; gap:12px; }
   .todo-container .form-right { width:100%; }
@@ -304,7 +295,6 @@ body {
   color:var(--muted);
 }
 
-/* lista dei completati: righe più "smorzate" */
 .todo-container #doneList .todo-row {
   background: transparent;
   opacity: 0.85;
@@ -315,13 +305,11 @@ body {
   font-weight:700;
 }
 
-/* badge priorità per completati mantenute ma meno evidenti */
 .todo-container #doneList .priority-badge {
   opacity: 0.9;
   filter: saturate(0.9);
 }
 
-/* pulsante ripristina (per riportare a TODO) */
 .todo-container .restore-btn {
   color: var(--violet-500);
   border-color: rgba(124,58,237,0.06);
@@ -329,11 +317,9 @@ body {
 /* ===== EXPIRED TODO: triangolo + etichetta ===== */
 .todo-container .todo-row.expired {
   position: relative;
-  /* leggero padding extra per non sovrapporre la label al contenuto */
   padding-left: 28px;
 }
 
-/* triangolo rosso nell'angolo sinistro */
 .todo-container .todo-row.expired::before {
   content: '';
   position: absolute;
@@ -346,7 +332,6 @@ body {
   border-bottom: 12px solid #ef4444; /* triangolo */
 }
 
-/* etichetta "SCADUTO" rossa accanto al triangolo */
 .todo-container .todo-row.expired::after {
   content: 'SCADUTO';
   position: absolute;
@@ -364,7 +349,6 @@ body {
   text-transform: uppercase;
 }
 
-/* versione più discreta per la lista DONE (se capita che ci siano expired anche lì) */
 .todo-container #doneList .todo-row.expired::after {
   background: rgba(239,68,68,0.9);
   color: #fff;

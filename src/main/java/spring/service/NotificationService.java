@@ -1,6 +1,5 @@
 package spring.service;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import spring.model.Notification;
 import spring.model.Todo;
@@ -8,7 +7,6 @@ import spring.repository.NotificationRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

@@ -33,12 +33,11 @@
     transform: scale(1.1);
 }
 
-/* BRAND (Titolo + sottotitolo) */
 .brand {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-family: 'Poppins', sans-serif; /* font più bello */
+    font-family: 'Poppins', sans-serif;
 }
 .brand h1 {
     margin: 0;
@@ -54,14 +53,12 @@
     opacity: 0.9;
 }
 
-/* TOPBAR RIGHT */
 .topbar-right {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-/* BUTTON BASES */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -88,7 +85,6 @@
 .btn-outline { background:transparent; border:1px solid rgba(15,23,42,0.06); }
 .btn-ghost { background:transparent; color:var(--muted); }
 
-/* hidden helper */
 .hidden { display:none !important; }
 
 /* =====================
@@ -155,7 +151,7 @@
     align-items: center;
     justify-content: center;
 }
-/* Notifications popover */
+
 .notif-popover {
     width: 360px;
     background: #fff;

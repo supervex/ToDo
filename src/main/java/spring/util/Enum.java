@@ -5,8 +5,7 @@ public class Enum {
     public enum TodoStatus {
         TODO,
         IN_PROGRESS,
-        DONE,
-        EXPIRED
+        DONE
     }
 
     public enum Priority {

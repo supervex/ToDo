@@ -105,7 +105,6 @@ document.addEventListener('topbar:ready', async () => {
                 });
             }
 
-            // Mostra il popover
             popover.style.display = 'block';
 
             const rect = notificationBtn.getBoundingClientRect();
