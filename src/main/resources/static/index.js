@@ -10,6 +10,9 @@ document.addEventListener('topbar:ready', () => {
             if (action === 'todo') {
                 window.location.href = '/todo/todo.html';
             }
+            if (action === 'diario') {
+                window.location.href = '/diario/diario.html';
+            }
             // puoi aggiungere altre azioni per altre card
         });
     });

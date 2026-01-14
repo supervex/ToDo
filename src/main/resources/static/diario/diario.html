@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Diario — Scrivania</title>
+    <link rel="stylesheet" href="diario.css">
+    <link rel="stylesheet" href="/components/topbar.css" />
+</head>
+<body>
+<!-- Topbar -->
+<div id="topbar-container"></div>
+
+<!-- Contenitore centrale del libro -->
+<div class="book-container">
+    <div class="book">
+        <div class="back"></div>
+        <div class="page6"></div>
+        <div class="page5"></div>
+        <div class="page4"></div>
+        <div class="page3"></div>
+        <div class="page2"></div>
+        <div class="page1"></div>
+        <div class="front">
+            <span class="cover-text">Diario</span>
+        </div>
+    </div>
+
+    <!-- Pagina del diario -->
+    <div class="diary-page" contenteditable="true" tabindex="0" aria-label="Pagina del diario"></div>
+</div>
+
+<script src="/components/topbar.js" defer></script>
+<script src="/api/api.js" defer></script>
+<script src="diario.js" defer></script>
+</body>
+
+</html>
