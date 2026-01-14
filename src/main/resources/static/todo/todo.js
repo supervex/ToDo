@@ -303,11 +303,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
     }
 
-    // --- funzione che aggiunge una riga in un container (todoList o doneList)
+
     function addTodoToList(todo, container = todoList) {
         const row = document.createElement('div');
         row.className = 'todo-row';
 
+        if (todo.expired) {
+            row.classList.add('expired');
+            row.title = 'Task scaduto';
+        }
         const dueHtml = todo.dueDate
             ? `<span class="due-date">${escapeHtml(formatDateDMY(todo.dueDate))}</span>`
             : `<span class="due-date due-empty">—</span>`;

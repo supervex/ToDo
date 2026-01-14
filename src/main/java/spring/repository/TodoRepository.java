@@ -14,7 +14,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
         List<Todo> findByUserIdOrderByDueDateAscPriorityDesc(Long userId);
 
-        List<Todo> findByUserIdAndStatusInOrderByDueDateAscPriorityDesc(Long userId, List<Enum.TodoStatus> statuses);
+        List<Todo> findByUserIdAndStatusInOrderByExpiredDescDueDateAscPriorityDesc(Long userId, List<Enum.TodoStatus> status);
 
         Optional<Todo> findByIdAndUserId(Long id, Long userId);
 

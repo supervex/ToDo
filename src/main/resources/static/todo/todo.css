@@ -326,3 +326,48 @@ body {
   color: var(--violet-500);
   border-color: rgba(124,58,237,0.06);
 }
+/* ===== EXPIRED TODO: triangolo + etichetta ===== */
+.todo-container .todo-row.expired {
+  position: relative;
+  /* leggero padding extra per non sovrapporre la label al contenuto */
+  padding-left: 28px;
+}
+
+/* triangolo rosso nell'angolo sinistro */
+.todo-container .todo-row.expired::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid #ef4444; /* triangolo */
+}
+
+/* etichetta "SCADUTO" rossa accanto al triangolo */
+.todo-container .todo-row.expired::after {
+  content: 'SCADUTO';
+  position: absolute;
+  top: 6px;
+  left: 22px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.4px;
+  box-shadow: 0 6px 18px rgba(239,68,68,0.08);
+  text-transform: uppercase;
+}
+
+/* versione più discreta per la lista DONE (se capita che ci siano expired anche lì) */
+.todo-container #doneList .todo-row.expired::after {
+  background: rgba(239,68,68,0.9);
+  color: #fff;
+  opacity: 0.95;
+}
+

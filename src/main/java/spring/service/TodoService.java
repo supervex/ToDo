@@ -14,6 +14,7 @@ import spring.util.Enum;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,12 +97,16 @@ public class TodoService {
     }
 
     public List<Todo> findAllByStatuses(List<Enum.TodoStatus> statuses, Long userId) {
-        List<Todo> todos = todoRepository.findByUserIdAndStatusInOrderByDueDateAscPriorityDesc(userId, statuses);
+        List<Todo> todos = todoRepository.findByUserIdAndStatusInOrderByExpiredDescDueDateAscPriorityDesc(userId, statuses);
 
         LocalDate today = LocalDate.now();
         LocalDate limitDate = today.plusDays(3);
         List<Todo> toSave = new ArrayList<>();
         for (Todo todo : todos) {
+
+            if (todo.getStatus() == Enum.TodoStatus.DONE) {
+                continue;
+            }
             LocalDate dueDate = todo.getDueDate();
             boolean isExpired = dueDate.isBefore(today);
             if (todo.isExpired() != isExpired) {
@@ -123,6 +128,12 @@ public class TodoService {
         if (!toSave.isEmpty()) {
             todoRepository.saveAll(toSave);
         }
+        todos.sort(
+                Comparator
+                        .comparing(Todo::isExpired).reversed() // expired = true prima
+                        .thenComparing(Todo::getDueDate)
+                        .thenComparing(Todo::getPriority, Comparator.reverseOrder())
+        );
         log.info("end for findAll payload: {}", todos);
         return todos;
     }
