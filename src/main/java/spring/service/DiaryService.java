@@ -55,6 +55,11 @@ public class DiaryService {
         if (!"manual".equalsIgnoreCase(diary.getType())) {
             throw new IllegalStateException("Solo le note manuali possono essere modificate");
         }
+        if(newMessage == null || newMessage.isBlank()) {
+            diaryRepository.deleteById(id);
+            log.info("end for updateManualEntry deleted payload: {}", diary);
+            return diary;
+        }
         diary.setMessage(newMessage);
         log.info("end for updateManualEntry payload: {}", diary);
         return diaryRepository.save(diary);

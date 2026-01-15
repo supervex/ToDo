@@ -3,6 +3,7 @@ document.addEventListener('topbar:ready', () => {
     const panelGrid = document.querySelector('.panel-grid');
     if (panelGrid) panelGrid.style.visibility = 'visible';
 
+    window.api.fetchTodosByStatuses(['TODO', 'IN_PROGRESS']);
 
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', () => {
