@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/giochi/giochi.css" />
+    <link rel="stylesheet" href="/components/topbar.css" />
+</head>
+<body>
+
+<div id="topbar-container"></div>
+
+<section class="dashboard-controls">
+    <input type="text" placeholder="Cerca un gioco..." />
+    <select>
+        <option value="">Tutti</option>
+        <option value="dev">In sviluppo</option>
+        <option value="playable">Giocabile</option>
+        <option value="done">Completato</option>
+    </select>
+</section>
+
+<section class="games-grid">
+
+    <div class="game-card">
+        <div class="game-image">
+            🎮
+        </div>
+
+        <div class="game-content">
+            <h3>Dino Runner</h3>
+            <p class="game-type">Arcade • 2D</p>
+            <span class="game-status dev">In sviluppo</span>
+
+            <div class="game-actions">
+                <button>Gioca</button>
+                <button>Dettagli</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-card">
+        <div class="game-image">
+            🐍
+        </div>
+
+        <div class="game-content">
+            <h3>Snake Battle</h3>
+            <p class="game-type">Action • 2D</p>
+            <span class="game-status playable">Giocabile</span>
+
+            <div class="game-actions">
+                <button>Gioca</button>
+                <button>Statistiche</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-card">
+        <div class="game-image">
+            🧩
+        </div>
+
+        <div class="game-content">
+            <h3>Puzzle Room</h3>
+            <p class="game-type">Puzzle • Adventure</p>
+            <span class="game-status done">Completato</span>
+
+            <div class="game-actions">
+                <button>Rigioca</button>
+                <button>Info</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script src="/components/topbar.js"></script>
+<script src="/api/api.js" defer></script>
+</body>
+</html>

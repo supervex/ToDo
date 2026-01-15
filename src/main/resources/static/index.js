@@ -14,7 +14,9 @@ document.addEventListener('topbar:ready', () => {
             if (action === 'diario') {
                 window.location.href = '/diario/diario.html';
             }
-            // puoi aggiungere altre azioni per altre card
+            if (action === 'giochi') {
+                window.location.href = '/giochi/giochi.html';
+            }
         });
     });
 });

@@ -87,6 +87,4 @@ public class DiaryService {
         log.info("end for createAutomaticEntry payload: {}", diary);
         diaryRepository.save(diary);
     }
-
-
 }

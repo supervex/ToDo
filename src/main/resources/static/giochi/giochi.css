@@ -1,0 +1,218 @@
+/* =====================
+   THEME VARIABLES
+   ===================== */
+:root{
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --accent: linear-gradient(90deg, #f7f8f6, #fbfbfb);!important;
+    --accent-flat: #fdfdfd; !important;
+    --text: #0f172a;
+    --muted: #6b7280;
+    --glass: rgba(255,255,255,0.7);
+    --radius: 14px;
+    --shadow-lg: 0 18px 40px rgba(15,23,42,0.08);
+    --shadow-sm: 0 6px 18px rgba(15,23,42,0.05);
+    --glass-border: rgba(15,23,42,0.04);
+    --focus: rgba(43,150,246,0.14);
+}
+
+/* =====================
+   RESET & BASE
+   ===================== */
+* { box-sizing: border-box; }
+html, body {
+    height:100%;
+    margin:0;
+    padding:0;
+}
+
+body {
+    background: linear-gradient(180deg,#f3f6fb 0%, #f9fbff 100%);
+}
+
+/* =====================
+   PAGE CONTAINER
+   ===================== */
+.games-container {
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    color: var(--text);
+    max-width: 1100px;
+    margin: 36px auto;
+    padding: 0 20px;
+}
+
+/* =====================
+   HEADER
+   ===================== */
+.games-header {
+    margin-bottom: 28px;
+}
+
+.games-header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.games-header p {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* =====================
+   GRID
+   ===================== */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+@media (max-width: 980px){
+    .games-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 760px){
+    .games-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 420px){
+    .games-grid { grid-template-columns: 1fr; }
+}
+
+/* =====================
+   GAME CARD
+   ===================== */
+.game-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px;
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.98));
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 30px rgba(12,24,48,0.04);
+    cursor: pointer;
+
+    transition:
+            transform .16s cubic-bezier(.2,.9,.25,1),
+            box-shadow .16s ease,
+            border-color .12s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(43,150,246,0.12);
+}
+
+/* =====================
+   ACCENT STRIP (left)
+   ===================== */
+.game-card::before {
+    display: none !important;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent);
+    border-radius: var(--radius) 0 0 var(--radius);
+    opacity: 0;
+    transition: opacity .15s ease;
+}
+
+.game-card:hover::before {
+    opacity: 1;
+}
+
+/* =====================
+   CARD TOP
+   ===================== */
+.game-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.game-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    transition: transform .18s ease;
+}
+
+.game-card:hover .game-icon {
+    transform: scale(1.08);
+}
+
+.game-title {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+}
+
+/* =====================
+   DESCRIPTION
+   ===================== */
+.game-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+/* =====================
+   TAG / STATUS
+   ===================== */
+.game-tag {
+    align-self: flex-start;
+    margin-top: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 999px;
+    background: rgba(43,150,246,0.12);
+    color: var(--accent-flat);
+}
+
+/* =====================
+   DISABLED / COMING SOON
+   ===================== */
+.game-card.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.game-card.disabled::after {
+    content: "COMING SOON";
+    position: absolute;
+    top: 14px;
+    right: -34px;
+    transform: rotate(45deg);
+    background: var(--accent-flat);
+    color: #fff;
+    font-size: 10px;
+    padding: 4px 40px;
+    letter-spacing: .12em;
+}
+
+/* =====================
+   ACCESSIBILITY
+   ===================== */
+.game-card:focus {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+}
+
+/* =====================
+   TOUCH POLISH
+   ===================== */
+@media (hover: none) {
+    .game-card:hover {
+        transform: none;
+        box-shadow: var(--shadow-sm);
+        border-color: var(--glass-border);
+    }
+}

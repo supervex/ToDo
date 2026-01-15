@@ -4,8 +4,6 @@
 :root{
     --bg: #f5f7fb;
     --card: #ffffff;
-    --accent: linear-gradient(90deg,#2563eb,#2b96f6);
-    --accent-flat: #2b96f6;
     --text: #0f172a;
     --muted: #6b7280;
     --glass: rgba(255,255,255,0.7);

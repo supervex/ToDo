@@ -60,5 +60,16 @@ public class TodoRequest {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+    @Override
+    public String toString() {
+        return "TodoRequest{" +
+                "userId=" + userId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", priority=" + priority +
+                ", dueDate=" + dueDate +
+                '}';
+    }
 }
 
