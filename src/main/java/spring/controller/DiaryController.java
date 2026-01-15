@@ -6,13 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import spring.service.DiaryService;
 import spring.model.Diary;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
     @RestController
@@ -22,7 +19,7 @@ import java.util.List;
         private final DiaryService diaryService;
 
         private static final Logger log = LoggerFactory.getLogger(DiaryController.class);
-        @Autowired
+
         public DiaryController(DiaryService diaryService) {
             this.diaryService = diaryService;
         }
@@ -30,6 +27,7 @@ import java.util.List;
         @GetMapping
         public ResponseEntity<?> getDiaryByDate(
                 @RequestParam String date, HttpSession session) {
+            log.info("start for getDiaryByDate payload: {}", date);
             LocalDate localDate = LocalDate.parse(date);
             Long userId = (Long) session.getAttribute("USER_ID");
             if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -38,39 +36,13 @@ import java.util.List;
         }
 
         @PostMapping
-        public ResponseEntity<?> createDiaryEntry(
-                @RequestBody Diary newEntry,
-                HttpSession session) {
-
-            log.info("start for createDiaryEntry payload: {}", newEntry);
+        public ResponseEntity<?> createDiaryEntry(@RequestBody Diary newEntry, HttpSession session) {
+            log.info("start for createDiaryEntry manual payload: {}", newEntry);
 
             Long userId = (Long) session.getAttribute("USER_ID");
             if (userId == null)
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
-            newEntry.setId(null);
             newEntry.setUserId(userId);
-            newEntry.setType("manual");
-
-            if (newEntry.getEntryDate() == null) {
-                return ResponseEntity
-                        .badRequest()
-                        .body("entryDate is required");
-            }
-
-            LocalDate entryDate = newEntry.getEntryDate();
-            LocalDate today = LocalDate.now();
-
-            LocalTime time;
-
-            if (entryDate.isAfter(today)) {
-                time = LocalTime.of(6, 0);
-            } else {
-                time = LocalTime.now();
-            }
-
-            newEntry.setCreatedAt(LocalDateTime.of(entryDate, time));
-
             Diary saved = diaryService.saveEntry(newEntry);
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         }
