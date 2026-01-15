@@ -24,11 +24,13 @@ public class TodoService {
     private static final Logger log = LoggerFactory.getLogger(TodoService.class);
     private final TodoRepository todoRepository;
     private final NotificationService notificationService;
+    private final DiaryService diaryService;
     private final HttpSession httpSession;
 
-    public TodoService(TodoRepository todoRepository, NotificationService notificationService, HttpSession httpSession) {
+    public TodoService(TodoRepository todoRepository, NotificationService notificationService, DiaryService diaryService, HttpSession httpSession) {
         this.todoRepository = todoRepository;
         this.notificationService = notificationService;
+        this.diaryService = diaryService;
         this.httpSession = httpSession;
     }
 
@@ -37,13 +39,13 @@ public class TodoService {
             todo.setCreatedAt(LocalDateTime.now());
             todoRepository.save(todo);
             log.info("end for save payload: {}", todo);
-            return new TodoResponse("Salvato con successo",true );
+            return new TodoResponse("Salvato con successo", true);
         } catch (Exception e) {
-            return new TodoResponse( "Errore durante il salvataggio: " + e.getMessage(),false );
+            return new TodoResponse("Errore durante il salvataggio: " + e.getMessage(), false);
         }
     }
 
-        public TodoResponse updatePartial(TodoUpdateRequest request, Long userId) {
+    public TodoResponse updatePartial(TodoUpdateRequest request, Long userId) {
         Optional<Todo> existingOpt =
                 todoRepository.findByIdAndUserId(request.getId(), userId);
         if (existingOpt.isEmpty()) {
@@ -85,6 +87,11 @@ public class TodoService {
     public void updateStatus(Long todoId, Long userId, Enum.TodoStatus status) {
         Todo todo = todoRepository.findByIdAndUserId(todoId, userId)
                 .orElseThrow(() -> new RuntimeException("Todo non trovato"));
+
+        diaryService.createAutomaticEntry(userId, status, todo);
+        if (status.equals(Enum.TodoStatus.DONE)) {
+            todo.setExpired(false);
+        }
         todo.setStatus(status);
         log.info("end for updateStatus payload: {}", todo);
         todoRepository.save(todo);

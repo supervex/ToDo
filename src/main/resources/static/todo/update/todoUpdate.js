@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelBtn = document.getElementById('cancelBtn');
     const dueDateInput = document.getElementById('dueDate');
     const startDate = document.getElementById('startDate');
+    let selectedPriority = 'MEDIUM';
+    const priorityButtons = document.querySelectorAll('.priority-btn');
 
     if (!todoId) {
         if (messageDiv) {
@@ -18,6 +20,19 @@ document.addEventListener('DOMContentLoaded', () => {
             messageDiv.style.color = 'red';
         }
         return;
+    }
+
+    priorityButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedPriority = btn.dataset.value;
+            setActivePriority(selectedPriority);
+        });
+    });
+
+    function setActivePriority(value) {
+        priorityButtons.forEach(b => {
+            b.classList.toggle('active', b.dataset.value === value);
+        });
     }
 
     window.api.getTodoById(todoId)
@@ -28,6 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
             statusSelect.value = todo.status;
             dueDateInput.value = todo.dueDate || '';
             startDate.value = toDateInputValue(todo.createdAt);
+            selectedPriority = todo.priority || 'MEDIUM';
+            setActivePriority(selectedPriority);
         })
         .catch(err => {
             if (messageDiv) {
@@ -42,7 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
             title: titleInput.value.trim(),
             description: descriptionInput.value.trim(),
             status: statusSelect.value,
-            id: todoId
+            id: todoId,
+            dueDate: dueDateInput.value || null,
+            priority: selectedPriority
         };
 
         if (!body.title) {

@@ -169,3 +169,38 @@ input:focus, textarea:focus, select:focus {
 /* subtle helpers */
 .small { font-size: 13px; color: var(--muted); }
 .hidden { display:none !important; }
+
+.priority-group {
+    display: flex;
+    gap: 10px;
+}
+
+.priority-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #f4f4f4;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.priority-btn.active {
+    background: #222;
+    color: white;
+    border-color: #222;
+}
+
+.priority-btn[data-value="LOW"].active {
+    background: #2ecc71;
+    border-color: #2ecc71;
+}
+
+.priority-btn[data-value="MEDIUM"].active {
+    background: #f1c40f;
+    border-color: #f1c40f;
+}
+
+.priority-btn[data-value="HIGH"].active {
+    background: #e74c3c;
+    border-color: #e74c3c;
+}

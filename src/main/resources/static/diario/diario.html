@@ -27,7 +27,22 @@
     </div>
 
     <!-- Pagina del diario -->
-    <div class="diary-page" contenteditable="true" tabindex="0" aria-label="Pagina del diario"></div>
+    <div class="diary-page" contenteditable="false" tabindex="0" aria-label="Pagina del diario">
+        <div class="diary-header" role="toolbar" aria-label="Seleziona data">
+            <button id="prev-day" class="arrow" aria-label="Giorno precedente">&larr;</button>
+            <div id="date-display" class="date-display" aria-live="polite"></div>
+            <button id="next-day" class="arrow" aria-label="Giorno successivo">&rarr;</button>
+        </div>
+
+        <div id="entries-container" class="entries-container" aria-live="polite">
+            <!-- qui verranno inseriti i messaggi recuperati dal server -->
+        </div>
+
+        <div class="editor-container">
+            <div id="editor" class="editor" contenteditable="true" aria-label="Scrivi una nuova nota"></div>
+        </div>
+    </div>
+
 </div>
 
 <script src="/components/topbar.js" defer></script>

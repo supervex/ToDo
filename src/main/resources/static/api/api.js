@@ -123,6 +123,50 @@ async function fetchTodosByStatuses(statuses) {
     const query = statuses.map(s => `status=${encodeURIComponent(s)}`).join('&');
     return getJSON(`/api/todos/status?${query}`);
 }
+// ---------------------------
+// Diary API
+// ---------------------------
+
+
+async function fetchDiaryByDate(date) {
+    return getJSON(`/api/diary?date=${encodeURIComponent(date)}`);
+}
+
+function saveDiaryLocal(date, content) {
+    if (!date) return;
+    localStorage.setItem(`diario-contenuto-${date}`, content);
+}
+
+function loadDiaryLocal(date) {
+    if (!date) return '';
+    return localStorage.getItem(`diario-contenuto-${date}`) || '';
+}
+
+async function createDiaryEntry({ message, date }) {
+    const res = await fetch('/api/diary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            message,
+            entryDate: date
+        })
+    });
+
+    if (!res.ok) throw new Error(`/api/diary POST - ${res.status}`);
+    return res.json();
+}
+
+async function updateDiaryEntry({ id, message }) {
+    const res = await fetch(`/api/diary/${id}`, {
+        method: 'PATCH',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+    });
+    if (!res.ok) throw new Error('updateDiaryEntry - ' + res.status);
+    return res.json();
+}
 
 // ---------------------------
 // Esporta tutte le funzioni globalmente
@@ -140,5 +184,10 @@ window.api = {
     updateTodo,
     fetchNotificationsCount,
     fetchNotifications,
-    markNotificationsAsRead
+    markNotificationsAsRead,
+    fetchDiaryByDate,
+    saveDiaryLocal,
+    loadDiaryLocal,
+    createDiaryEntry,
+    updateDiaryEntry
 };

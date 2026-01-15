@@ -60,4 +60,16 @@ public class TodoUpdateRequest {
     public void setPriority(Enum.Priority priority) {
         this.priority = priority;
     }
+
+    @Override
+    public String toString() {
+        return "TodoUpdateRequest{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                ", dueDate=" + dueDate +
+                ", priority=" + priority +
+                '}';
+    }
 }
