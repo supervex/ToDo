@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formTitle.innerText = 'Login';
                 showMessage();
             }, 1200);
+            setTimeout(() => window.location.href = '/index.html', 600);
         } catch (err) {
             showMessage(err.message || 'Errore di rete', 'red');
         } finally {

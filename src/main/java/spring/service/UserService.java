@@ -68,11 +68,10 @@ public class UserService {
         session.invalidate();
     }
 
-    public UserRegisterResponse register(UserRegisterRequest request) {
+    public UserRegisterResponse register(UserRegisterRequest request, HttpSession session) {
 
         UserRegisterResponse response = new UserRegisterResponse();
 
-        // controlli base
         if (request.getUserName() == null || request.getUserName().isBlank()
                 || request.getPassword() == null || request.getPassword().isBlank()
                 || request.getEmail() == null || request.getEmail().isBlank()) {
@@ -106,7 +105,8 @@ public class UserService {
         user.setPassword(hashedPassword);
 
         userRepository.save(user);
-
+        session.setAttribute("USER_ID", user.getUserId());
+        session.setAttribute("USERNAME", user.getUserName());
         response.setSuccess(true);
         response.setMessage("Registrazione completata con successo");
         log.info("end for register payload: {}", request);

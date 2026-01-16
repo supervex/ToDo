@@ -41,10 +41,10 @@ public class UserController {
 
     @PostMapping("/register")
     public UserRegisterResponse register(
-            @RequestBody UserRegisterRequest request
+            @RequestBody UserRegisterRequest request, HttpSession session
     ) {
         log.info("start for register payload: {}", request);
-        return userService.register(request);
+        return userService.register(request, session);
     }
 
     @GetMapping("/me")
