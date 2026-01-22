@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/components/topbar.css" />
+    <link rel="stylesheet" href="siti.css">
+</head>
+<body class="index-bg">
+
+<div id="topbar-container"></div>
+
+<main class="container">
+
+    <section class="grid">
+        <button data-action="carSharing" class="card">
+            <h3>sito1</h3>
+            <p>car sharing</p>
+        </button>
+
+        <button class="card">
+            <h3>sito2</h3>
+            <p>sito2</p>
+        </button>
+
+        <button class="card">
+            <h3>sito3</h3>
+            <p>sito3</p>
+        </button>
+
+        <button class="card">
+            <h3>sito4</h3>
+            <p>sito4</p>
+        </button>
+
+    </section>
+</main>
+
+<script src="/components/auth-guard.js"></script>
+<script>
+    requireAuth();
+</script>
+<script src="/components/topbar.js"></script>
+<script src="siti.js"></script>
+<script src="/api/api.js" defer></script>
+</body>
+</html>

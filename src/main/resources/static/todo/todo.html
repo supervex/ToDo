@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/todo/todo.css">
     <link rel="stylesheet" href="/components/topbar.css" />
 </head>
-<body>
+<body class="index-bg">
 
 <div id="topbar-container"></div>
 
@@ -79,12 +79,12 @@
 
 </main>
 
-<script src="/components/topbar.js"></script>
-<script src="/api/api.js"></script>
 <script src="/components/auth-guard.js"></script>
 <script>
     requireAuth();
 </script>
+<script src="/components/topbar.js"></script>
+<script src="/api/api.js"></script>
 <script src="/todo/todo.js"></script>
 </body>
 </html>

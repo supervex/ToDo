@@ -17,6 +17,9 @@ document.addEventListener('topbar:ready', () => {
             if (action === 'giochi') {
                 window.location.href = '/giochi/giochi.html';
             }
+            if (action === 'siti') {
+                window.location.href = '/siti/siti.html';
+            }
         });
     });
 });

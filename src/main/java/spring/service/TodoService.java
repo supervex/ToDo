@@ -37,6 +37,7 @@ public class TodoService {
     public TodoResponse save(Todo todo) {
         try {
             todo.setCreatedAt(LocalDateTime.now());
+            diaryService.createAutomaticEntry(todo.getUserId(), todo.getStatus(), todo);
             todoRepository.save(todo);
             log.info("end for save payload: {}", todo);
             return new TodoResponse("Salvato con successo", true);

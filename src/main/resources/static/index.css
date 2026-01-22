@@ -1,3 +1,16 @@
+/* =========================
+   INDEX BACKGROUND
+========================= */
+body.index-bg {
+    background-color: #f7f0da;
+    background-image: linear-gradient(
+            180deg,
+            transparent 90%,
+            #eae4cf 10%
+    );
+    background-size: 5px 50px;
+}
+
 /* =====================
    THEME VARIABLES
    ===================== */
@@ -21,8 +34,6 @@
 * { box-sizing: border-box; }
 html, body { height:100%; margin:0; padding:0; }
 
-/* background page only */
-body { background: linear-gradient(180deg,#f3f6fb 0%, #f9fbff 100%); }
 
 /* =====================
    SCOPE: everything inside .container
